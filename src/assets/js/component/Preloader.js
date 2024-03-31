@@ -2,6 +2,9 @@ import Component from '@js/class/Component'
 import each from 'lodash/each'
 import GSAP from 'gsap'
 import { TextureLoader } from 'three'
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
+
+const fontPass = '/msdf/Anton-Regular-msdf.fnt'
 
 export default class Preloader extends Component {
   constructor() {
@@ -28,28 +31,47 @@ export default class Preloader extends Component {
 
     this.textureLoader = new TextureLoader()
 
-    this.assets.forEach(imageDom => {
-      const image = new Image()
+    this.fontLoader = new FontLoader()
 
-      const id = imageDom.getAttribute('data-id')
+    const fontPromise = new Promise((resolve, reject) => {
+      this.fontLoader.load(
+        fontPass,
+        font => {
+          window.FONT = font
+          resolve()
+        },
+        undefined,
+        error => {
+          reject(error)
+        }
+      )
+    })
 
-      image.crossOrigin = 'anonymous'
+    const imagePromises = this.assets.map(imageDOM => {
+      return new Promise((resolve, reject) => {
+        const image = new Image()
+        const id = imageDOM.getAttribute('data-id')
 
-      image.src = imageDom.getAttribute('data-src')
+        image.crossOrigin = 'anonymous'
+        image.src = imageDOM.getAttribute('data-src')
+        image.onload = () => {
+          const texture = this.textureLoader.load(image.src)
 
-      image.onload = () => {
-        const texture = this.textureLoader.load(image.src)
+          texture.needsUpdate = true
 
-        texture.needsUpdate = true
+          window.TEXTURES[id] = texture
 
-        window.TEXTURES[id] = texture
+          resolve()
+        }
 
-        this.onAssetLoaded()
-      }
+        image.onerror = error => {
+          reject(error)
+        }
+      })
+    })
 
-      image.onerror = error => {
-        console.error('An error happened while loading a texture', error)
-      }
+    Promise.all([fontPromise, ...imagePromises]).then(() => {
+      this.onLoaded()
     })
   }
 

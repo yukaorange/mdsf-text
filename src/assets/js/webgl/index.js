@@ -55,9 +55,9 @@ export default class Canvas {
       antialias: true
     })
 
-    this.renderer.setClearColor(0x000000, 0)
+    this.renderer.setClearColor(0x111111, 1)
 
-    this.renderer.setPixelRatio(window.devicePixelRatio)
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1))
 
     this.renderer.setSize(window.innerWidth, window.innerHeight)
 
@@ -80,21 +80,42 @@ export default class Canvas {
   }
 
   createPane() {
-    this.pane = new Pane()
+    // this.pane = new Pane()
 
     this.PARAMS = {
-      alpha: 1
+      progress1: 0,
+      progress2: 0,
+      progress3: 0,
+      progress4: 0
     }
 
-    this.pane.addBinding(this.PARAMS, 'alpha', {
-      min: 0,
-      max: 1,
-      step: 0.01
-    })
+    // this.pane.addBinding(this.PARAMS, 'progress1', {
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.01
+    // })
+
+    // this.pane.addBinding(this.PARAMS, 'progress2', {
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.01
+    // })
+
+    // this.pane.addBinding(this.PARAMS, 'progress3', {
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.01
+    // })
+
+    // this.pane.addBinding(this.PARAMS, 'progress4', {
+    //   min: 0,
+    //   max: 1,
+    //   step: 0.01
+    // })
   }
 
   createControls() {
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+    // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
   }
 
   createClock() {
@@ -136,6 +157,8 @@ export default class Canvas {
     } else {
       this.destroyHome()
     }
+
+    this.progress()
   }
 
   onResize(device) {
@@ -184,18 +207,6 @@ export default class Canvas {
       y: this.y
     }
 
-    if (this.about) {
-      this.about.onTouchDown(values)
-    }
-
-    if (this.collections) {
-      this.collections.onTouchDown(values)
-    }
-
-    if (this.detail) {
-      this.detail.onTouchDown(values)
-    }
-
     if (this.home) {
       this.home.onTouchDown(values)
     }
@@ -213,18 +224,6 @@ export default class Canvas {
     const values = {
       x: this.x,
       y: this.y
-    }
-
-    if (this.about) {
-      this.about.onTouchMove(values)
-    }
-
-    if (this.collections) {
-      this.collections.onTouchMove(values)
-    }
-
-    if (this.detail) {
-      this.detail.onTouchMove(values)
     }
 
     if (this.home) {
@@ -250,18 +249,6 @@ export default class Canvas {
       y: this.y
     }
 
-    if (this.about) {
-      this.about.onTouchUp(values)
-    }
-
-    if (this.collections) {
-      this.collections.onTouchUp(values)
-    }
-
-    if (this.detail) {
-      this.detail.onTouchUp(values)
-    }
-
     if (this.home) {
       this.home.onTouchUp(values)
     }
@@ -269,14 +256,61 @@ export default class Canvas {
 
   onWheel({ pixelX, pixelY }) {
     if (this.collections) {
-      // if (this.transition && this.transition.isTransitioning) return;
-
       this.collections.onWheel({ pixelX, pixelY })
     }
 
     if (this.home) {
       this.home.onWheel({ pixelX, pixelY })
     }
+  }
+
+  onMouseMove(event) {
+    if (this.home) {
+      this.home.onMouseMove(event)
+    }
+  }
+
+  /**
+   * progress
+   */
+  progress() {
+    const timeline = GSAP.timeline()
+
+    const durationAmount = 1
+    const stagger = 0.2
+
+    timeline.to(this.PARAMS, {
+      delay: 0.4,
+      progress1: 1,
+      duration: durationAmount
+    })
+    timeline.to(
+      this.PARAMS,
+      {
+        delay: 0.4,
+        progress2: 1,
+        duration: durationAmount
+      },
+      stagger
+    )
+    timeline.to(
+      this.PARAMS,
+      {
+        delay: 0.4,
+        progress3: 1,
+        duration: durationAmount
+      },
+      stagger * 2
+    )
+    timeline.to(
+      this.PARAMS,
+      {
+        delay: 0.4,
+        progress4: 1,
+        duration: durationAmount
+      },
+      stagger * 3
+    )
   }
 
   /**
@@ -300,9 +334,9 @@ export default class Canvas {
     if (this.home) {
       this.home.update({
         scroll: scroll,
-        time: this.time
+        time: this.time,
+        params: this.PARAMS
       })
-      this.home.setParameter(this.PARAMS)
     }
 
     this.time.delta = this.clock.getDelta()

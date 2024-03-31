@@ -1,8 +1,6 @@
 import map from 'lodash/map'
 import GSAP from 'gsap'
 
-import { PlaneGeometry } from 'three'
-
 import * as THREE from 'three'
 
 import Plane from './Plane'
@@ -44,7 +42,17 @@ export default class Home {
       lerp: 0.1
     }
 
-    this.createGeometry()
+    this.mouse = {
+      current: {
+        x: 0,
+        y: 0
+      },
+      target: {
+        x: 0,
+        y: 0
+      },
+      lerp: 0.1
+    }
 
     this.createPlane()
 
@@ -58,13 +66,8 @@ export default class Home {
     this.show()
   }
 
-  createGeometry() {
-    this.geometry = new PlaneGeometry(1, 1, 100, 100)
-  }
-
   createPlane() {
     this.plane = new Plane({
-      geometry: this.geometry,
       sizes: this.sizes,
       device: this.device
     })
@@ -92,17 +95,13 @@ export default class Home {
   }
 
   onTouchDown({ x, y }) {
-    this.speed.target = 1
-    this.scrollCurrent.x = this.scroll.x
-    this.scrollCurrent.y = this.scroll.y
+    this.mouse.target.x = x.start
+    this.mouse.target.y = y.start
   }
 
   onTouchMove({ x, y }) {
-    const xDistance = x.start - x.end
-    const yDistance = y.start - y.end
-
-    this.x.target = this.scrollCurrent.x - xDistance
-    this.y.target = this.scrollCurrent.y - yDistance
+    this.mouse.target.x = x.end
+    this.mouse.target.y = y.end
   }
 
   onTouchUp({ x, y }) {
@@ -114,20 +113,29 @@ export default class Home {
     this.y.target -= pixelY
   }
 
+  onMouseMove({ x, y }) {
+    this.mouse.target.x = x
+    this.mouse.target.y = y
+  }
+
   /**
    * update
    */
-  update({ scroll, time }) {
+  update({ scroll, time, params }) {
     if (!this.plane) return
+
+    this.mouse.current.x +=
+      (this.mouse.target.x - this.mouse.current.x) * this.mouse.lerp
+
+    this.mouse.current.y +=
+      (this.mouse.target.y - this.mouse.current.y) * this.mouse.lerp
 
     this.plane.update({
       scroll: scroll,
-      time: time
+      time: time,
+      mouse: this.mouse,
+      params: params
     })
-  }
-
-  setParameter(params) {
-    this.plane.setParameter(params)
   }
 
   /**

@@ -126,6 +126,10 @@ class App {
     window.addEventListener('resize', event => {
       this.onResize(event)
     })
+
+    window.addEventListener('mousemove', event => {
+      this.onMouseMove(event)
+    })
   }
 
   /**
@@ -183,6 +187,12 @@ class App {
 
     if (this.page && this.page.update) {
       this.page.onWheel(normalizedWheel)
+    }
+  }
+
+  onMouseMove(event) {
+    if (this.canvas && this.canvas.update) {
+      this.canvas.onMouseMove(event)
     }
   }
 
