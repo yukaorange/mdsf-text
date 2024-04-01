@@ -53,13 +53,17 @@ export default class Preloader extends Component {
         const id = imageDOM.getAttribute('data-id')
 
         image.crossOrigin = 'anonymous'
+
         image.src = imageDOM.getAttribute('data-src')
+
         image.onload = () => {
           const texture = this.textureLoader.load(image.src)
 
           texture.needsUpdate = true
 
           window.TEXTURES[id] = texture
+
+          this.onAssetLoaded()
 
           resolve()
         }
@@ -82,9 +86,9 @@ export default class Preloader extends Component {
 
     this.elements.text.innerHTML = `${Math.round(percent * 100)}%`
 
-    if (this.length === this.totalAssetsLength) {
-      this.onLoaded()
-    }
+    // if (this.length === this.totalAssetsLength) {
+    //   this.onLoaded()
+    // }
   }
 
   onLoaded() {
