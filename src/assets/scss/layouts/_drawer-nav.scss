@@ -1,8 +1,37 @@
 @use "./../mixin/" as *;
 .drawer-nav {
   display: none;
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  overscroll-behavior-y: contain;
+  pointer-events: none;
 }
 
 .drawer-nav.active {
   display: block;
+  pointer-events: auto;
+}
+
+.drawer-nav__inner {
+  width: 100%;
+  min-height: calc(100vh + 1px);
+  display: grid;
+  place-items: center;
+  align-content: center;
+
+  background-color: var(--yellow-1);
+}
+.drawer-nav__list {
+  display: grid;
+  row-gap: 1.6rem;
+}
+.drawer-nav__list__item {
+  display: grid;
+}
+.drawer-nav__list__item__link {
+  font-size: 2.4rem;
+}
+.drawer-nav__close {
+  margin-top: 4rem;
 }

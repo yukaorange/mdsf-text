@@ -38,7 +38,10 @@ html {
   font-size: calc(var(--vw) / 136.6);
   scrollbar-width: thin; //webkit
   scrollbar-color: #444 #ccc; //webkit
-  min-height: 100vh;
+  min-height: 100svh;
+
+  overflow-y: hidden;
+  overscroll-behavior-y: none;
 }
 
 @include mq(sp) {
@@ -62,6 +65,7 @@ body {
     "Open Sans",
     "Helvetica Neue",
     sans-serif;
+
   ._en {
     font-family:
       "Roboto",
@@ -144,6 +148,10 @@ a {
   transition: var(--duration);
 }
 
+button {
+  color: inherit;
+}
+
 @media (hover: hover) and (pointer: fine) {
   a:hover {
     text-decoration: none;
@@ -224,7 +232,7 @@ ol {
   --blue-3: #42a5f5;
   --blue-4: #2196f3;
   --blue-5: #1976d2;
-  --yellow-1: #f9c767;
+  --yellow-1: #eec923;
   --yellow-2: #fff176;
   --yellow-3: #ffee58;
   --yellow-4: #ffeb3b;

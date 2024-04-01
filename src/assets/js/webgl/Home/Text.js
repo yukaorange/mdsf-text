@@ -104,7 +104,7 @@ export default class Text {
             value: this.noiseTexture
           },
           uMyColor: {
-            value: new THREE.Color('#12d61c')
+            value: new THREE.Color('#EEC923')
           },
           uMouse: {
             value: new THREE.Vector2(0, 0)
@@ -180,7 +180,7 @@ export default class Text {
       space = 0.8
     } else if (this.device === 'pc') {
       devideAmount = 4 / normalize
-      space = 0.25
+      space = 0.4
     }
 
     let localIndex = index - 4 //(-4 -> 4)

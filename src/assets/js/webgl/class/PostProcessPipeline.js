@@ -25,7 +25,7 @@ export default class PostProcessPipeline {
 
   createPasses() {
     this.passes = {
-      // grayScale: new GrayScalePass(),
+      grayScale: new GrayScalePass(),
       // green: new GreenPass(),
       // blue: new BluePass(),
       out: new OutPass()

@@ -44,8 +44,6 @@ export default class Canvas {
 
     this.createClock()
 
-    this.createPostProcessPipeline()
-
     this.onResize(this.device)
   }
 
@@ -157,6 +155,8 @@ export default class Canvas {
     } else {
       this.destroyHome()
     }
+
+    this.createPostProcessPipeline()
 
     this.progress()
   }
@@ -345,6 +345,8 @@ export default class Canvas {
 
     this.time.current += this.time.delta
 
-    this.postProcessPipeline.render()
+    if (this.postProcessPipeline) {
+      this.postProcessPipeline.render()
+    }
   }
 }

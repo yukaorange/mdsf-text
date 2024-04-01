@@ -1,0 +1,26 @@
+@use "./../mixin/" as *;
+
+.inspire {
+  position: absolute;
+  bottom: 4rem;
+  left: 4rem;
+}
+.inspire__text {
+  color: var(--white-1);
+  padding-bottom: 0.1rem;
+  border-bottom: 0.1rem solid var(--white-1);
+}
+
+@include mq(sp) {
+  .inspire {
+    position: absolute;
+    bottom: 4rem;
+    left: 4rem;
+  }
+  .inspire__text {
+    font-size: 1.2rem;
+    color: var(--white-1);
+    padding-bottom: 0.1rem;
+    border-bottom: 0.1rem solid var(--white-1);
+  }
+}

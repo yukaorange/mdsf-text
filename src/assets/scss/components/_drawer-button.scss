@@ -1,0 +1,68 @@
+@use "./../mixin/" as *;
+
+.drawer-button {
+  position: fixed;
+  z-index: 10000;
+  top: 2rem;
+  right: 2rem;
+  width: 12rem;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  background-color: var(--yellow-1);
+}
+
+.drawer-button[aria-expanded="true"] .drawer-button__text--close {
+  display: block;
+}
+.drawer-button[aria-expanded="false"] .drawer-button__text--close {
+  display: none;
+}
+
+.drawer-button[aria-expanded="true"] .drawer-button__text--menu {
+  display: none;
+}
+
+.drawer-button[aria-expanded="false"] .drawer-button__text--menu {
+  display: block;
+}
+
+.drawer-button__text--menu {
+  font-size: 1.6rem;
+}
+.drawer-button__text--close {
+  font-size: 1.6rem;
+}
+
+@include mq(sp) {
+  .drawer-button {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    width: 8rem;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background-color: var(--yellow-1);
+  }
+
+  .drawer-button[aria-expanded="true"] .drawer-button__text--close {
+    display: block;
+  }
+  .drawer-button[aria-expanded="false"] .drawer-button__text--close {
+    display: none;
+  }
+
+  .drawer-button[aria-expanded="true"] .drawer-button__text--menu {
+    display: none;
+  }
+
+  .drawer-button[aria-expanded="false"] .drawer-button__text--menu {
+    display: block;
+  }
+
+  .drawer-button__text--menu {
+    font-size: 1.4rem;
+  }
+  .drawer-button__text--close {
+    font-size: 1.4rem;
+  }
+}

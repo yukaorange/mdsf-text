@@ -1,6 +1,7 @@
 precision mediump float;
 
 uniform sampler2D tDiffuse;
+uniform sampler2D uTexture;
 
 varying vec2 vUv;
 
@@ -12,9 +13,9 @@ void main() {
 
   vec4 texel = texture2D(tDiffuse, uv);
 
-  float gray = dot(texel.rgb, vec3(1.)) / 3.;
+  vec4 texture = texture2D(uTexture, uv);
 
-  color = vec3(gray);
+  color = texture.rgb * texel.rgb;
 
   gl_FragColor = vec4(color, 1.);
 }

@@ -64,8 +64,6 @@ float createCircle() {
 
   float circleRadius = max(0.0, uResolution.y * 0.1 / uResolution.x);
 
-  circleRadius = circleRadius;
-
   vec2 shapeUv = viewportUv - mousePoint;
   shapeUv /= vec2(1.0, viewportAspect);
 
@@ -171,7 +169,7 @@ void main() {
 
   float g = texture2D(uNoiseTexture, vUv).r;
 
-  float grad = fract(100.0 * g + uTime / 10.0);
+  float grad = fract(20.0 * g + uTime / 10.0);
 
   float start = smoothstep(0.0, 0.01, grad);
 
@@ -181,8 +179,9 @@ void main() {
 
   float circ = createDistortCircle();
 
-  vec3 distortColor = vec3(layoutUv.y) * uMyColor * vec3(mask) + vec3(circ);
-  // vec3 distortColor = vec3(1.0 - layoutUv.y);
+  // vec3 distortColor = vec3(1.0 - layoutUv.y) * uMyColor * vec3(mask) + vec3(circ);
+
+  vec3 distortColor = vec3(1.0 - layoutUv.y) + uMyColor * vec3(mask) * vec3(1.0 - circ);
 
  //letters
   vec4 l1 = vec4(1.0, 1.0, 1.0, border);

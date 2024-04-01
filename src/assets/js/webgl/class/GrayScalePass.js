@@ -10,7 +10,13 @@ export default class GrayScalePass extends PostProcessPass {
     super({
       fragment: grayScaleFragment,
       vertex: vertex,
-      renderTarget: new WebGLRenderTarget(window.innerWidth, window.innerHeight)
+      renderTarget: new WebGLRenderTarget(
+        window.innerWidth,
+        window.innerHeight
+      ),
+      uniforms: {
+        uTexture: { value: window.TEXTURES['3'] }
+      }
     })
   }
 }

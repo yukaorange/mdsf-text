@@ -7,9 +7,10 @@ import {
 } from 'three'
 
 export default class PostProcessPass {
-  constructor({ vertex, fragment, renderTarget }) {
+  constructor({ vertex, fragment, renderTarget, uniforms }) {
     this.material = new ShaderMaterial({
       uniforms: {
+        ...uniforms,
         tDiffuse: { value: null }
       },
       vertexShader: vertex,
