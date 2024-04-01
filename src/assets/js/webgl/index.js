@@ -276,7 +276,7 @@ export default class Canvas {
   progress() {
     const timeline = GSAP.timeline()
 
-    const durationAmount = 1
+    const durationAmount = 1.5
     const stagger = 0.2
 
     timeline.to(this.PARAMS, {

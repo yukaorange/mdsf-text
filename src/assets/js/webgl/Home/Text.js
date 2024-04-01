@@ -11,7 +11,7 @@ import * as THREE from 'three'
 import vertex from '@js/shaders/vertex.glsl'
 import fragment from '@js/shaders/fragment.glsl'
 
-export default class Plane {
+export default class Text {
   constructor({ sizes, device }) {
     this.sizes = sizes
 
@@ -20,8 +20,6 @@ export default class Plane {
     this.createTexture()
 
     this.createFont()
-
-    this.createTextBox()
 
     this.createGeometry()
 
@@ -44,19 +42,13 @@ export default class Plane {
     this.font = window.FONT
   }
 
-  createTextBox() {
-    this.textBox = new THREE.Group()
-  }
-
   createGeometry() {
     this.geometry = new MSDFTextGeometry({
       text: 'TRANSFORM',
       font: this.font.data,
       letterSpacing: 2,
-      lineHeight: 1.5
+      lineHeight: 1
     })
-
-    console.log(this.geometry)
 
     this.textBounds = this.geometry.computeBoundingBox()
 
@@ -145,44 +137,85 @@ export default class Plane {
     this.updateY()
   }
 
-  setPosition() {
+  setPosition(index) {
     this.textBounds = this.geometry.computeBoundingBox()
 
     this.textWidth = this.textBounds.max.x - this.textBounds.min.x
 
     this.textHeight = this.textBounds.max.y - this.textBounds.min.y
 
-    this.textAspect = this.textWidth / this.textHeight
-
     let coefficient
     if (this.device === 'sp') {
-      coefficient = 0.018
+      coefficient = 0.03
     } else if (this.device == 'pc') {
-      coefficient = 0.018
+      coefficient = 0.02
     }
 
-    this.mesh.rotation.z = -Math.PI / 2
-    this.mesh.rotation.y = Math.PI / 4
+    let normalize = this.sizes.width / 6.15
 
-    const scale = (coefficient * this.sizes.width) / 6.15 //When window.innerWidth is 1366 , this.sizes.width is 6.15
+    const standardScale = coefficient * normalize //When window.innerWidth is 1366 , this.sizes.width is 6.15
 
-    this.mesh.scale.set(scale, -scale, scale)
+    let scaleX
+    let scaleY
 
-    // this.mesh.rotation.z = -Math.PI/4
+    if (this.device === 'sp') {
+      scaleX = standardScale
+      scaleY = -standardScale
+    } else if (this.device === 'pc') {
+      scaleX = standardScale * 0.8
+      scaleY = -standardScale * 1.5
+    }
 
-    let standardPosX = -this.sizes.width / 2.0
+    this.mesh.scale.set(scaleX, scaleY, 1)
 
-    let standardPosY = this.sizes.height / 2.0 - this.textHeight * scale
+    const toCenterX = (this.textWidth / 2.0) * scaleX
+    const toCenterY = (-this.textHeight / 2) * standardScale
 
-    let marginLeft = (this.sizes.width / 60.0) * 2.0
+    let devideAmount
 
-    let moveToCenter =
-      -this.sizes.height / 2.0 + (this.textHeight * scale) / 2.0
+    let space
 
-    this.mesh.position.x = standardPosX + marginLeft
+    if (this.device === 'sp') {
+      devideAmount = 8 / normalize
+      space = 0.8
+    } else if (this.device === 'pc') {
+      devideAmount = 4 / normalize
+      space = 0.25
+    }
 
-    // this.mesh.position.y = standardPosY + moveToCenter
-    this.mesh.position.y = standardPosY
+    let localIndex = index - 4 //(-4 -> 4)
+
+    if (localIndex < 0) {
+      const spaceIndex = localIndex * localIndex * space
+
+      this.mesh.rotation.z = Math.PI / 2
+
+      this.mesh.rotation.y = Math.PI / 2 - Math.abs(localIndex / 8)
+
+      this.mesh.position.x = toCenterY + (this.textHeight * scaleX) / 2
+
+      this.mesh.position.x -= spaceIndex / devideAmount
+
+      this.mesh.position.y = -toCenterX
+
+      this.mesh.position.z = localIndex / devideAmount
+    } else {
+      const spaceIndex = localIndex * localIndex * space
+
+      this.mesh.rotation.z = -Math.PI / 2
+      this.mesh.rotation.y =
+        -Math.PI / 2 + Math.abs(localIndex / 8 - Math.PI * 0)
+
+      this.mesh.position.x = toCenterY + (this.textHeight * scaleX) / 2
+
+      this.mesh.position.x += spaceIndex / devideAmount
+
+      this.mesh.position.y = toCenterX
+
+      this.mesh.position.z = -localIndex / devideAmount
+    }
+
+    this.standardRotation = this.mesh.rotation.y
   }
 
   /**
@@ -208,10 +241,10 @@ export default class Plane {
   /**
    * events
    */
-  onResize(value) {
+  onResize(value, index) {
     this.calculateBounds(value)
 
-    this.setPosition()
+    this.setPosition(index)
 
     this.mesh.material.uniforms.uResolution.value = new THREE.Vector2(
       window.innerWidth,
@@ -223,16 +256,7 @@ export default class Plane {
    * update
    */
 
-  updateScale() {
-    // console.log('plane device : ', this.device)
-    // if (this.device === 'sp') {
-    //   this.mesh.scale.x = this.sizes.width / 2
-    //   this.mesh.scale.y = this.sizes.width / 2
-    // } else {
-    //   this.mesh.scale.x = this.sizes.height / 2
-    //   this.mesh.scale.y = this.sizes.height / 2
-    // }
-  }
+  updateScale() {}
 
   updateX(x = 0) {}
 
@@ -254,5 +278,13 @@ export default class Plane {
       mouse.current.x / window.innerWidth,
       mouse.current.y / window.innerHeight
     )
+
+    if (this.mesh) {
+      const mouseCoord = (mouse.current.x / window.innerWidth) * 2 - 1
+
+      const addtionalRadius = (mouseCoord * Math.PI) / 16
+
+      this.mesh.rotation.y = this.standardRotation + addtionalRadius
+    }
   }
 }

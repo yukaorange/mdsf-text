@@ -171,7 +171,7 @@ void main() {
 
   float g = texture2D(uNoiseTexture, vUv).r;
 
-  float grad = fract(30.0 * g + uTime / 10.0);
+  float grad = fract(100.0 * g + uTime / 10.0);
 
   float start = smoothstep(0.0, 0.01, grad);
 

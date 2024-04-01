@@ -3,7 +3,7 @@ import GSAP from 'gsap'
 
 import * as THREE from 'three'
 
-import Plane from './Plane'
+import Textbox from './Textbox'
 
 export default class Home {
   constructor({ scene, sizes, device }) {
@@ -54,9 +54,9 @@ export default class Home {
       lerp: 0.1
     }
 
-    this.createPlane()
+    this.createTextbox()
 
-    this.scene.add(this.plane.mesh)
+    this.scene.add(this.textbox.group)
 
     this.onResize({
       sizes: this.sizes,
@@ -66,8 +66,8 @@ export default class Home {
     this.show()
   }
 
-  createPlane() {
-    this.plane = new Plane({
+  createTextbox() {
+    this.textbox = new Textbox({
       sizes: this.sizes,
       device: this.device
     })
@@ -78,19 +78,19 @@ export default class Home {
    */
 
   show() {
-    this.plane.show()
+    this.textbox.show()
   }
 
   hide() {
-    this.plane.hide()
+    this.textbox.hide()
   }
 
   /**
    * events
    */
   onResize(values) {
-    if (this.plane) {
-      this.plane.onResize(values)
+    if (this.textbox) {
+      this.textbox.onResize(values)
     }
   }
 
@@ -122,7 +122,7 @@ export default class Home {
    * update
    */
   update({ scroll, time, params }) {
-    if (!this.plane) return
+    if (!this.textbox) return
 
     this.mouse.current.x +=
       (this.mouse.target.x - this.mouse.current.x) * this.mouse.lerp
@@ -130,7 +130,7 @@ export default class Home {
     this.mouse.current.y +=
       (this.mouse.target.y - this.mouse.current.y) * this.mouse.lerp
 
-    this.plane.update({
+    this.textbox.update({
       scroll: scroll,
       time: time,
       mouse: this.mouse,
@@ -142,6 +142,6 @@ export default class Home {
    * destroy
    */
   destroy() {
-    this.scene.remove(this.plane.mesh)
+    this.scene.remove(this.textbox.mesh)
   }
 }
