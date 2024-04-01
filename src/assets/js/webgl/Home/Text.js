@@ -199,7 +199,7 @@ export default class Text {
       this.mesh.position.y = -toCenterX
 
       this.mesh.position.z = localIndex / devideAmount
-    } else {
+    } else if (localIndex > 0) {
       const spaceIndex = localIndex * localIndex * space
 
       this.mesh.rotation.z = -Math.PI / 2
@@ -213,6 +213,9 @@ export default class Text {
       this.mesh.position.y = toCenterX
 
       this.mesh.position.z = -localIndex / devideAmount
+    }
+    if (localIndex === 0) {
+      this.mesh.visible = false
     }
 
     this.standardRotation = this.mesh.rotation.y
