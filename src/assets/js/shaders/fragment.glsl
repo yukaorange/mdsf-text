@@ -98,7 +98,7 @@ float createDistortCircle() {
 
   float dist = distance(shapeUv, mousePoint);
 
-  dist = smoothstep(circleRadius, circleRadius + 0.001, dist);
+  dist = smoothstep(circleRadius, circleRadius + 0.1, dist);
 
   return dist;
 }
